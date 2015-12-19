@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+    mavenLocal()
+    maven { url 'http://maven.oschina.net/content/groups/public/' }
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.springframework:spring-core:4.2.0.RELEASE'
+    compile 'org.springframework:spring-beans:4.2.0.RELEASE'
+    compile 'org.springframework:spring-context:4.2.0.RELEASE'
+    compile 'org.springframework:spring-context-support:4.2.0.RELEASE'
+    compile 'org.springframework:spring-jdbc:4.2.0.RELEASE'
+    compile 'org.springframework:spring-tx:4.2.0.RELEASE'
+    compile 'org.springframework:spring-aop:4.2.0.RELEASE'
+    compile 'org.aspectj:aspectjrt:1.8.7'
+    compile 'org.aspectj:aspectjweaver:1.8.7'
+    compile 'org.springframework:spring-test:4.2.0.RELEASE'
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.4.1'
+    compile 'org.apache.logging.log4j:log4j-core:2.4.1'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+init {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'config.demo.App'
+    }
+}
+
+mainClassName = "config.demo.App"
+
+processResources {
+    exclude { "**/*.*" }
+}
+
+
+task pack(type: Copy, dependsOn: [clean, installDist]) {
+    sourceSets.main.resources.srcDirs.each {
+        from it
+        into "$buildDir/install/$rootProject.name/bin/resources"
+    }
+}
